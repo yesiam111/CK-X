@@ -91,7 +91,7 @@ services:
 
   # Jump Host (ckad9999 and ckad9988)
   jumphost:
-    image: nishanb/ck-x-simulator-jumphost:latest
+    image: jeffvn/ck-x-simulator-jumphost:latest
     build:
       context: ./jumphost
     hostname: ckad9999
@@ -196,7 +196,7 @@ services:
 
   # Facilitator Service
   facilitator:
-    image: nishanb/ck-x-simulator-facilitator:latest
+    image: jeffvn/ck-x-simulator-faciliator:latest
     build:
       context: ./facilitator
       dockerfile: Dockerfile

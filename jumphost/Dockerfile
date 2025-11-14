@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     bash-completion\
     nano \
-    docker.io\
-    jq
+    jq bc docker.io
 
 # Accept build-time architecture argument
 ARG TARGETARCH

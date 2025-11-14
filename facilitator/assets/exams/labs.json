@@ -69,6 +69,16 @@
         "warmUpTimeInSeconds": 260,
         "difficulty": "Medium",
         "examDurationInMinutes": 90
+      },
+      {
+        "id": "docker-000",
+        "assetPath": "assets/exams/other/000",
+        "name": "Docker Speed Run - Custom",
+        "category": "Other",
+        "description": "Fast-paced practice lab covering Docker fundamentals including images, containers, volumes, networking, OCI, and security best practices.",
+        "warmUpTimeInSeconds": 120,
+        "difficulty": "Medium",
+        "examDurationInMinutes": 120
       }
     ]
   } 

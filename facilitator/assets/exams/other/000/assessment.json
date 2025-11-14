@@ -1,0 +1,246 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Create a Docker image named `docker-speedrun:v1` using the provided Dockerfile in the `/tmp/exam/q1` directory.\n\nTag the image also as `docker-speedrun:latest`.",
+      "concepts": ["docker", "images", "tags"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Image docker-speedrun:v1 exists",
+          "verificationScriptFile": "q1_s1_validate_image_v1.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "Image docker-speedrun:latest exists",
+          "verificationScriptFile": "q1_s2_validate_image_latest.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Run a container named `web-server` using the `nginx:alpine` image. The container should:\n\n- Run in detached mode\n- Map host port `8080` to container port `80`\n- Set an environment variable `NGINX_HOST=localhost`",
+      "concepts": ["docker", "containers", "port mapping", "environment variables"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Container web-server is running",
+          "verificationScriptFile": "q2_s1_validate_container_running.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Container uses the correct image",
+          "verificationScriptFile": "q2_s2_validate_image.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Port mapping is correct",
+          "verificationScriptFile": "q2_s3_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "4",
+          "description": "Environment variable is set correctly",
+          "verificationScriptFile": "q2_s4_validate_env.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Create a Docker volume named `data-volume` and then run a container named `volume-test` using the `alpine:latest` image that:\n\n- Mounts the `data-volume` to `/app/data` in the container\n- Creates a file called `/app/data/test.txt` with the content 'Docker volumes test'\n- Exits after completing these actions",
+      "concepts": ["docker", "volumes", "data persistence"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Volume data-volume exists",
+          "verificationScriptFile": "q3_s1_validate_volume.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Container was created with correct mount",
+          "verificationScriptFile": "q3_s2_validate_container_mount.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "File exists in the volume with correct content",
+          "verificationScriptFile": "q3_s3_validate_file_content.sh",
+          "expectedOutput": "0",
+          "weightage": 4
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Create a multi-stage Dockerfile in `/tmp/exam/q4/Dockerfile` that:\n\n- Uses `golang:1.17-alpine` as the build stage\n- Builds a simple Go application from `/tmp/exam/q4/main.go`\n- Uses `alpine:latest` as the final stage\n- Copies only the compiled binary to the final stage\n- Sets the entrypoint to run the binary\n\nThen build this image with the tag `multi-stage:latest`.",
+      "concepts": ["docker", "multi-stage builds", "optimization"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Dockerfile exists and has multiple stages",
+          "verificationScriptFile": "q4_s1_validate_dockerfile.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "Image was built successfully",
+          "verificationScriptFile": "q4_s2_validate_image_built.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "3",
+          "description": "Image size is optimized (under 20MB)",
+          "verificationScriptFile": "q4_s3_validate_image_size.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Create a custom bridge network named `app-network` with subnet `172.18.0.0/16`. Then run two containers:\n\n- Container `app1` using `alpine` image with network `app-network` and command to keep it running with `sleep 10000`\n- Container `app2` using `alpine` image with network `app-network` and command to ping `app1` 3 times",
+      "concepts": ["docker", "networking", "dns"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Custom network exists with correct subnet",
+          "verificationScriptFile": "q5_s1_validate_network.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Container app1 is running on app-network",
+          "verificationScriptFile": "q5_s2_validate_app1.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Container app2 successfully pinged app1",
+          "verificationScriptFile": "q5_s3_validate_ping.sh",
+          "expectedOutput": "0",
+          "weightage": 4
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Run a container named `limited-resources` using the `polinux/stress` image that:\n\n- Is limited to use at maximum 0.5 CPU cores\n- Is limited to use at maximum 256MB of memory\n- Runs a CPU stress test on 1 CPU\n- Runs in detached mode",
+      "concepts": ["docker", "resource limits", "container constraints"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "CPU limit is set correctly",
+          "verificationScriptFile": "q6_s2_validate_cpu.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Memory limit is set correctly",
+          "verificationScriptFile": "q6_s3_validate_memory.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Create a Docker Compose file at `/tmp/exam/q7/docker-compose.yml` that defines a simple web application with two services:\n\n- Service `web`: Using nginx:alpine, exposed on port 8081\n- Service `db`: Using postgres:13, with environment variables for database credentials: `POSTGRES_USER=dbuser`, `POSTGRES_PASSWORD=dbpassword`, `POSTGRES_DB=myapp`\n- Define a volume for the database data and mount to `/var/lib/postgresql/data`\n- Define a custom network for the services\n\nThen use Docker Compose to start the services in detached mode.",
+      "concepts": ["docker", "docker-compose", "multi-container", "networking"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Docker Compose file exists with correct format",
+          "verificationScriptFile": "q7_s1_validate_compose_file.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Services are running",
+          "verificationScriptFile": "q7_s2_validate_services.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "3",
+          "description": "Network and volume configuration is correct",
+          "verificationScriptFile": "q7_s3_validate_network_volume.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "A container named `broken-container` is running but not working correctly. Use Docker troubleshooting techniques to:\n\n- Check the container logs\n- Fix the issue (it's a missing JSON config file at `/app/config.json`)\n\nHint: Container can be delete and re-create using image `broken-app:latest` and name `broken-container` if you need to change container spec",
+      "concepts": ["docker", "troubleshooting", "logs", "exec"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Container is fixed and working",
+          "verificationScriptFile": "q8_s1_validate_container_fixed.sh",
+          "expectedOutput": "0",
+          "weightage": 6
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "default",
+      "machineHostname": "ckad9999",
+      "question": "Create a Dockerfile in `/tmp/exam/q9/Dockerfile` that implements a non-root user:\n\n- Base image: `python:3.9-slim`\n- Create a user `appuser` with UID 1001\n- Set the working directory to `/app`\n- Copy a sample `app.py` from `/tmp/exam/q9/app.py`\n- Set the user to `appuser` before the entrypoint\n- Define the entrypoint to run the Python script\n\nBuild and run this container with the name `secure-app`.",
+      "concepts": ["docker", "security", "non-root user"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Dockerfile exists with non-root user configuration",
+          "verificationScriptFile": "q9_s1_validate_dockerfile.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "Container is running with non-root user",
+          "verificationScriptFile": "q9_s2_validate_container_user.sh",
+          "expectedOutput": "0",
+          "weightage": 5
+        }
+      ]
+    }
+  ]
+} 
