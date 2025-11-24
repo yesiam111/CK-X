@@ -37,7 +37,7 @@
         "category": "CKA",
         "description": "Comprehensive lab covering advanced Kubernetes administration topics including storage, networking, security, and troubleshooting with focus on real-world scenarios, updated with the latest CKA exam curriculum changes.",
         "warmUpTimeInSeconds": 360,
-        "difficulty": "Hard",
+        "difficulty": "Medium",
         "examDurationInMinutes": 135
       },
       {
