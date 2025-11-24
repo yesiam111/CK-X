@@ -1,0 +1,297 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "namespace": "storage-task",
+      "machineHostname": "ckad9999",
+      "question": "Create a Dynamic PVC named `data-pvc` with the following specifications:\n\n- Storage Class: `standard`\n- Access Mode: `ReadWriteOnce`\n- Storage Request: `2Gi`\n\nThen create a Pod named `data-pod` using the `nginx` image that mounts this PVC as volume with name `data` at `/usr/share/nginx/html`.\n\nEnsure both the PVC and Pod are in the `storage-task` namespace.",
+      "concepts": ["storage", "persistent-volumes", "pods"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "PVC exists with correct specifications",
+          "verificationScriptFile": "q1_s1_validate_pvc.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Pod exists and is running",
+          "verificationScriptFile": "q1_s2_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "3",
+          "description": "PVC is correctly mounted in the pod",
+          "verificationScriptFile": "q1_s3_validate_mount.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "namespace": "scheduling",
+      "machineHostname": "ckad9999",
+      "question": "Create a deployment named `app-scheduling` with `3` replicas using the `nginx` image that must only run on node `k3d-cluster-agent-1` using node affinity (not **node selector**).\n\nRequirements:\n- Use `requiredDuringSchedulingIgnoredDuringExecution`\n- Match the node by its hostname\n- Label the target node with `disk=ssd` before creating the deployment",
+      "concepts": ["scheduling", "node-affinity", "deployments"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Node is correctly labeled",
+          "verificationScriptFile": "q5_s1_validate_node_label.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Deployment exists with correct node affinity",
+          "verificationScriptFile": "q5_s2_validate_affinity.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "All pods are running on the correct node",
+          "verificationScriptFile": "q5_s3_validate_pod_placement.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "namespace": "scheduling",
+      "machineHostname": "ckad9999",
+      "question": "Configure node `k3d-cluster-agent-1` with a taint `key=special-workload`, `value=true` and `effect=NoSchedule`.\n\nThen create a deployment named `toleration-deploy` with `2` replicas using the `nginx` image that can tolerate this taint.\n\nFinally, create another deployment named `normal-deploy` with `2` replicas that should not run on the tainted node.",
+      "concepts": ["scheduling", "taints", "tolerations"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Node is correctly tainted",
+          "verificationScriptFile": "q7_s1_validate_taint.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Toleration deployment exists and pods are scheduled correctly",
+          "verificationScriptFile": "q7_s2_validate_toleration_deploy.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Normal deployment exists and pods avoid tainted node",
+          "verificationScriptFile": "q7_s3_validate_normal_deploy.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "namespace": "stateful",
+      "machineHostname": "ckad9999",
+      "question": "Create a StatefulSet named `web` with `3` replicas using the `nginx` image. Requirements:\n\n- Create a headless service named `web-svc` to expose the StatefulSet\n- Each pod should have a volume mounted at `/usr/share/nginx/html`\n- Use the StorageClass `cold` for dynamic provisioning\n- Volume claim template should request 1Gi storage\n\nEnsure pods are created in sequence and can be accessed using their stable network identity.",
+      "concepts": ["statefulsets", "headless-services", "storage"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "StatefulSet exists with correct specifications",
+          "verificationScriptFile": "q8_s1_validate_statefulset.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Headless service exists and is configured correctly",
+          "verificationScriptFile": "q8_s2_validate_service.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "PVCs are created and bound correctly",
+          "verificationScriptFile": "q8_s3_validate_storage.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "namespace": "helm-test",
+      "machineHostname": "ckad9999",
+      "question": "Using Helm:\n\n1. Add the bitnami repository `https://charts.bitnami.com/bitnami`\n2. Install the `nginx` chart from bitnami with release name `web-release` in namespace `helm-test`\n3. Configure the service type as `NodePort` and set the replica count to `2`\n4. Verify the deployment is successful and pods are running",
+      "concepts": ["helm", "package-management"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Helm repository is added correctly",
+          "verificationScriptFile": "q11_s1_validate_repo.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Helm release is installed with correct configuration",
+          "verificationScriptFile": "q11_s2_validate_release.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Deployment is running with correct specifications",
+          "verificationScriptFile": "q11_s3_validate_deployment.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "namespace": "monitoring",
+      "machineHostname": "ckad9999",
+      "question": "Create a deployment named `resource-consumer` with 3 replicas that:\n\n1. Uses the image `gcr.io/kubernetes-e2e-test-images/resource-consumer:1.5`\n2. Sets resource requests:\n   - CPU: `100m`\n   - Memory: `128Mi`\n3. Sets resource limits:\n   - CPU: `200m`\n   - Memory: `256Mi`\n4. Create a `HorizontalPodAutoscaler` for this deployment:\n   - Min replicas: `3`\n   - Max replicas: `6`\n   - Target CPU utilization: `50%`\n\nNote: metrics-server is already installed in the cluster.",
+      "concepts": ["monitoring", "resource-management", "autoscaling"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployment exists with correct resource configuration",
+          "verificationScriptFile": "q15_s1_validate_deployment.sh",
+          "expectedOutput": "0",
+          "weightage": 3
+        },
+        {
+          "id": "2",
+          "description": "HPA is configured correctly",
+          "verificationScriptFile": "q15_s2_validate_hpa.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Pods are running and ready",
+          "verificationScriptFile": "q15_s3_validate_pods.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "namespace": "cluster-admin",
+      "machineHostname": "ckad9999",
+      "question": "Perform the following cluster administration tasks:\n\n1. Create a ServiceAccount named `app-admin` in the `cluster-admin` namespace\n2. Create a Role that allows:\n   - `List`, `get`, `watch` operations on `pods` and `deployments`\n   - `Create` and `delete` operations on `configmaps`\n   - `Update` operations on `deployments`\n3. Bind the Role to the ServiceAccount\n4. Create a test Pod named `admin-pod` that uses this ServiceAccount with:\n   - Image: `bitnami/kubectl:latest`\n   - Command: `sleep 3600`\n\nVerify the pod can perform the allowed operations but cannot perform other operations (like creating pods).",
+      "concepts": ["rbac", "service-accounts", "security"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "ServiceAccount exists with correct configuration",
+          "verificationScriptFile": "q16_s1_validate_sa.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Role and RoleBinding are configured correctly",
+          "verificationScriptFile": "q16_s2_validate_rbac.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Test pod is running with correct ServiceAccount",
+          "verificationScriptFile": "q16_s3_validate_pod.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "namespace": "network",
+      "machineHostname": "ckad9999",
+      "question": "Configure network policies:\n\n1. Create a deployment named `web` using `nginx` image with label `app=web`\n2. Create a deployment named `api` using `nginx` image with label `app=api`\n3. Create a deployment named `db` using `postgres` image with label `app=db`\n4. Create NetworkPolicies to:\n   - Allow web to communicate only with api\n   - Allow api to communicate only with db\n   - Deny all other traffic between pods",
+      "concepts": ["networking", "network-policies", "security"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Deployments exist with correct labels",
+          "verificationScriptFile": "q17_s1_validate_deployments.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        },
+        {
+          "id": "2",
+          "description": "Network policies exist with correct specifications",
+          "verificationScriptFile": "q17_s2_validate_policies.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "namespace": "scheduling",
+      "machineHostname": "ckad9999",
+      "question": "Configure advanced scheduling:\n\n1. Create a pod named `high-priority`\n2. Create a pod named `low-priority`\n3. Configure pod anti-affinity to ensure these pods don't run on the same node",
+      "concepts": ["scheduling", "priority", "anti-affinity"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Pods are created with correct specifications",
+          "verificationScriptFile": "q19_s2_validate_pods.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Anti-affinity rules are enforced correctly",
+          "verificationScriptFile": "q19_s3_validate_antiaffinity.sh",
+          "expectedOutput": "0",
+          "weightage": 1
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "namespace": "troubleshoot",
+      "machineHostname": "ckad9999",
+      "question": "A deployment named `failing-app` has been created in the namespace `troubleshoot` but pods are not running. The deployment uses image `nginx:1.25` and should have 3 replicas.\n\nFix the following issues:\n\n1. The deployment is using an incorrect container port (port 8080 instead of 80)\n2. The pods are failing due to insufficient memory (current limit is 64Mi, should be 256Mi)\n3. There's a misconfigured liveness probe checking port 8080 instead of 80\n\nEnsure all pods are running successfully after applying the fixes.",
+      "concepts": ["troubleshooting", "debugging", "deployment-configuration"],
+      "verification": [
+        {
+          "id": "1",
+          "description": "Container port is correctly set to 80",
+          "verificationScriptFile": "q20_s1_validate_port.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "2",
+          "description": "Memory limits are set correctly to 256Mi",
+          "verificationScriptFile": "q20_s2_validate_memory.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "3",
+          "description": "Liveness probe is configured correctly",
+          "verificationScriptFile": "q20_s3_validate_probe.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        },
+        {
+          "id": "4",
+          "description": "All pods are running successfully",
+          "verificationScriptFile": "q20_s4_validate_pods.sh",
+          "expectedOutput": "0",
+          "weightage": 2
+        }
+      ]
+    }
+  ]
+} 

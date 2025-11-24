@@ -184,7 +184,7 @@ services:
 
   # Facilitator Service
   facilitator:
-    image: jeffvn/ck-x-simulator-faciliator:latest
+    image: jeffvn/ck-x-simulator-facilitator:latest
     hostname: facilitator
     expose:
       - "3000"
